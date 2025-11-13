@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作品集 - 个人主页</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        }
+        .project-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .filter-btn {
+            transition: all 0.3s ease;
+        }
+        .filter-btn.active {
+            background-color: #d69e2e;
+            color: white;
+        }
+        .project-item {
+            opacity: 1;
+            transform: scale(1);
+            transition: all 0.5s ease;
+        }
+        .project-item.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-gray-900">个人主页</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="index.html" class="text-gray-600 hover:text-amber-600 px-3 py-2 text-sm font-medium transition-colors">首页</a>
+                        <a href="about.html" class="text-gray-600 hover:text-amber-600 px-3 py-2 text-sm font-medium transition-colors">关于我</a>
+                        <a href="portfolio.html" class="text-gray-900 hover:text-amber-600 px-3 py-2 text-sm font-medium transition-colors">作品集</a>
+                        <a href="contact.html" class="text-gray-600 hover:text-amber-600 px-3 py-2 text-sm font-medium transition-colors">联系我</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-900">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 text-base font-medium">首页</a>
+                <a href="about.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 text-base font-medium">关于我</a>
+                <a href="portfolio.html" class="text-gray-900 block px-3 py-2 text-base font-medium">作品集</a>
+                <a href="contact.html" class="text-gray-600 hover:text-gray-900 block px-3 py-2 text-base font-medium">联系我</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="pt-16">
+        <!-- 页面标题 -->
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">我的作品集</h1>
+                <p class="text-xl text-gray-600 mb-8">展示我最自豪的项目成果</p>
+                <div class="w-24 h-1 bg-amber-600 mx-auto"></div>
+            </div>
+        </section>
+
+        <!-- 项目筛选 -->
+        <section class="py-12 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-wrap justify-center gap-4 mb-12">
+                    <button class="filter-btn active px-6 py-3 rounded-full font-medium bg-white text-gray-700 hover:bg-amber-600 hover:text-white" data-filter="all">
+                        全部项目
+                    </button>
+                    <button class="filter-btn px-6 py-3 rounded-full font-medium bg-white text-gray-700 hover:bg-amber-600 hover:text-white" data-filter="web">
+                        Web应用
+                    </button>
+                    <button class="filter-btn px-6 py-3 rounded-full font-medium bg-white text-gray-700 hover:bg-amber-600 hover:text-white" data-filter="mobile">
+                        移动应用
+                    </button>
+                    <button class="filter-btn px-6 py-3 rounded-full font-medium bg-white text-gray-700 hover:bg-amber-600 hover:text-white" data-filter="data">
+                        数据可视化
+                    </button>
+                    <button class="filter-btn px-6 py-3 rounded-full font-medium bg-white text-gray-700 hover:bg-amber-600 hover:text-white" data-filter="ecommerce">
+                        电商平台
+                    </button>
+                </div>
+
+                <!-- 项目网格 -->
+                <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- 项目1 -->
+                    <div class="project-item project-card bg-white rounded-xl overflow-hidden shadow-lg" data-category="mobile">
+                        <img src="resources/project1.jpg" alt="移动应用项目" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">智能健康管理应用</h3>
+                            <p class="text-gray-600 mb-4">一个功能完整的健康管理移动应用，包含运动追踪、饮食记录、健康数据分析等功能。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">React Native</span>
+                                <span class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">Firebase</span>
+                                <span class="px-3 py-1 bg-purple-100 text-purple-800 text-sm rounded-full">Redux</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <a href="#" class="text-amber-600 hover:text-amber-700 font-medium">查看详情 →</a>
+                                <div class="flex space-x-2">
+                                    <a href="#" class="text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 项目2 -->
+                    <div class="project-item project-card bg-white rounded-xl overflow-hidden shadow-lg" data-category="ecommerce">
+                        <img src="resources/project2.jpg" alt="电商平台项目" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">现代化电商平台</h3>
+                            <p class="text-gray-600 mb-4">为传统电商企业进行现代化重构，提升网站性能50%，改善用户体验，增加移动端支持。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 bg-purple-100 text-purple-800 text-sm rounded-full">Vue.js</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full">Node.js</span>
+                                <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full">MongoDB</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <a href="#" class="text-amber-600 hover:text-amber-700 font-medium">查看详情 →</a>
+                                <div class="flex space-x-2">
+                                    <a href="#" class="text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 项目3 -->
+                    <div class="project-item project-card bg-white rounded-xl overflow-hidden shadow-lg" data-category="data">
+                        <img src="resources/project3.jpg" alt="数据可视化项目" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">企业数据可视化平台</h3>
+                            <p class="text-gray-600 mb-4">为企业客户提供实时数据分析和可视化解决方案，支持多种数据源和自定义报表。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full">D3.js</span>
+                                <span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-sm rounded-full">Python</span>
+                                <span class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">PostgreSQL</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <a href="#" class="text-amber-600 hover:text-amber-700 font-medium">查看详情 →</a>
+                                <div class="flex space-x-2">
+                                    <a href="#" class="text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 项目4 -->
+                    <div class="project-item project-card bg-white rounded-xl overflow-hidden shadow-lg" data-category="web">
+                        <img src="resources/project4.jpg" alt="社交媒体平台" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">专业社交平台</h3>
+                            <p class="text-gray-600 mb-4">为特定行业打造的专业社交网络平台，提供人脉拓展、知识分享和职业发展功能。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">Next.js</span>
+                                <span class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">GraphQL</span>
+                                <span class="px-3 py-1 bg-purple-100 text-purple-800 text-sm rounded-full">Prisma</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <a href="#" class="text-amber-600 hover:text-amber-700 font-medium">查看详情 →</a>
+                                <div class="flex space-x-2">
+                                    <a href="#" class="text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 项目5 -->
+                    <div class="project-item project-card bg-white rounded-xl overflow-hidden shadow-lg" data-category="web">
+                        <img src="resources/hero-bg.jpg" alt="在线教育平台" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">在线学习管理系统</h3>
+                            <p class="text-gray-600 mb-4">为教育机构开发的完整在线学习平台，支持课程管理、学生进度跟踪和互动学习功能。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full">Angular</span>
+                                <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">Express.js</span>
+                                <span class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">MySQL</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <a href="#" class="text-amber-600 hover:text-amber-700 font-medium">查看详情 →</a>
+                                <div class="flex space-x-2">
+                                    <a href="#" class="text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 项目6 -->
+                    <div class="project-item project-card bg-white rounded-xl overflow-hidden shadow-lg" data-category="data">
+                        <img src="resources/profile.jpg" alt="金融分析工具" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">实时金融数据分析工具</h3>
+                            <p class="text-gray-600 mb-4">为金融机构开发的实时数据分析和风险管理工具，支持多维度数据展示和风险预警。</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-sm rounded-full">React</span>
+                                <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full">WebSocket</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full">Redis</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <a href="#" class="text-amber-600 hover:text-amber-700 font-medium">查看详情 →</a>
+                                <div class="flex space-x-2">
+                                    <a href="#" class="text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-400">© 2025 个人主页. 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 移动端菜单
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // 项目筛选功能
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const projectItems = document.querySelectorAll('.project-item');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有按钮的active类
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // 添加当前按钮的active类
+                this.classList.add('active');
+
+                const filter = this.getAttribute('data-filter');
+
+                projectItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // 项目卡片动画
+        const projectObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    anime({
+                        targets: entry.target,
+                        opacity: [0, 1],
+                        translateY: [30, 0],
+                        duration: 600,
+                        easing: 'easeOutCubic',
+                        delay: anime.stagger(200)
+                    });
+                    projectObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.style.opacity = '0';
+            projectObserver.observe(card);
+        });
+    </script>
+    <script src="main.js"></script>
+</body>
+</html>
