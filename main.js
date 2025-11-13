@@ -24,7 +24,7 @@ function initMobileMenu() {
     }
 }
 
-// 英雄区域动画
+// 英雄区域动画  
 function initHeroAnimations() {
     // 标题动画
     anime({
